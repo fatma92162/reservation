@@ -1,335 +1,682 @@
-/* Styles de base */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
+/* Réinitialisation globale */
+* {
     margin: 0;
     padding: 0;
-}
-
-/* En-tête */
-/* Style pour le texte de bienvenue */
-.welcome-text {
-    color: #4CAF50; /* Couleur assortie au thème, ajustez si nécessaire */
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 20px;
-}
-
-
-/* Texte de bienvenue */
-h2.welcome-message {
-    color: #4CAF50; /* Assortie au header */
-    text-align: center;
-    margin-top: 20px;
-}
-
-/* Conteneur principal */
-.container {
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    border-radius: 8px;
-}
-
-/* Tableaux */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-table th,
-table td {
-    border: 1px solid #ddd;
-    text-align: left;
-    padding: 8px;
-}
-
-table th {
-    background-color: #f9f9f9;
-    font-weight: bold;
-}
-
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Boutons */
-.btn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.btn-primary {
-    background-color: #4CAF50;
-}
-
-.btn-primary:hover {
-    background-color: #45a049;
-}
-
-.btn-danger {
-    background-color: #e74c3c;
-}
-
-.btn-danger:hover {
-    background-color: #c0392b;
-}
-
-.btn-secondary {
-    background-color: #007BFF;
-}
-
-.btn-secondary:hover {
-    background-color: #0056b3;
-}
-
-/* Liens */
-a {
-    text-decoration: none;
-    color: #4CAF50;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Style pour le texte du footer */
-.footer-text {
-    color: #4CAF50; /* Couleur assortie au thème, ajustez si nécessaire */
-    font-size: 14px;
-    text-align: center;
-    margin: 10px 0;
-}
-/* Styles globaux */
-body {
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
 }
 
+body {
+    background-color: #60BA97;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-/* En-tête */
+/* Header */
 .header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 20px 0;
-    text-align: center;
-}
-
-.header .btn-logout {
-    background-color: #e74c3c;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.header .btn-logout:hover {
-    background-color: #c0392b;
-}
-
-/* Conteneur principal */
-.main-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-
-h1, h2 {
-    color: #4CAF50;
-}
-
-/* Boutons */
-.btn {
-    display: inline-block;
-    padding: 10px 15px;
-    color: white;
-    background-color: #4CAF50;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: #45a049;
-}
-
-.btn-add {
-    margin-bottom: 20px;
-}
-
-/* Tableau */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    background-color: #F9F5E8;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-table th, table td {
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-table th {
-    background-color: #f4f4f9;
-    color: #333;
-}
-
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Status */
-.status {
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
-.status.available {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.status.unavailable {
-    background-color: #e74c3c;
-    color: white;
-}
-
-.footer-text {
-    color: #ffffff; /* Couleur blanche */
-    font-size: 14px;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Légère ombre pour effet esthétique */
-}
-.footer {
-    background-color: #4CAF50; /* Couleur verte assortie au thème */
     padding: 20px 0;
-    text-align: center;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
-}
-
-
-.header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 20px 0;
-    text-align: center;
+    border-bottom: 3px solid #2e7d32;
 }
 
 .header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-.navbar ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 1rem;
+.header h1 {
+    color: #2e7d32;
+    font-size: 28px;
+    font-family: "Bauhaus 93", Arial, sans-serif;
 }
 
-.navbar ul li a {
-    color: #fff;
-    text-decoration: none;
-    padding: 0.5rem 1rem;
-    transition: background-color 0.3s;
-}
 
-.navbar ul li a:hover,
-.navbar ul li a.active {
-    background-color: #555;
-    border-radius: 5px;
-}
-
-.main-container {
-    padding: 2rem;
-}
-
-.btn {
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 5px;
+.welcome-text {
+     font-size: 28px;
+    color: #60BA97;
     font-weight: bold;
+    font-family: "Bauhaus 93", Arial, sans-serif;
+}
+
+/* Main Container */
+.main-container {
+    flex: 1;
+    padding: 40px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.container h2 {
+    color: #60BA97;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-family: "Bauhaus 93", Arial, sans-serif;
+}
+
+/* Formulaires */
+.form-login, 
+.form-search-sort,
+.search-form,
+.sort-form {
+    background-color: #F9F5E8;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.input-group input,
+.search-form input,
+.sort-form select,
+.form-search-sort input,
+.form-search-sort select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4CAF50;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Boutons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px;
+}
+
+.btn-primary {
+    background-color:#60BA97;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #1b5e20;
+}
+
+.btn-secondary {
+    background-color: #1E90FF;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #0d47a1;
+}
+
+.btn-admin {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+.btn-admin:hover {
+    background-color: #60BA97;
+}
+
+.btn-logout {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
 }
 
 .btn-add {
-    background-color: #4caf50;
-    color: white;
+    background-color: #4CAF50;
+    color: #fff;
+    display: block;
+    width: fit-content;
+    margin: 0 auto 20px;
 }
 
 .btn-edit {
-    background-color: #ffc107;
-    color: white;
+    background-color: #007bff;
+    color: #fff;
 }
 
 .btn-delete {
-    background-color: #f44336;
-    color: white;
+    background-color: #dc3545;
+    color: #fff;
 }
 
-.btn:hover {
-    opacity: 0.8;
+.btn-search, .btn-sort {
+    background-color:#60BA97;
+    color: #fff;
 }
 
-.velo-table {
+/* Tableau de bord */
+.dashboard-links {
+    background-color: #F9F5E8;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Tableaux */
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1rem;
+    background-color: #F9F5E8;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.velo-table th,
-.velo-table td {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
+table thead {
+    background-color:#60BA97 ;
+    color: #fff;
+}
+
+table th, table td {
+    padding: 12px 15px;
     text-align: left;
+    border-bottom: 1px solid #ddd;
 }
 
-.velo-table th {
-    background-color: #f4f4f9;
+table tbody tr:hover {
+    background-color: #f5f5f5;
 }
 
-.status.available {
-    color: green;
+/* Statut de disponibilité */
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.available {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.unavailable {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Statistiques */
+.stats {
+    background-color: #F9F5E8;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stats h3 {
+    color: #60BA97;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: "Bauhaus 93", Arial, sans-serif;
+}
+
+/* Formulaires de recherche et tri */
+.form-search-sort,
+.search-form,
+.sort-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-form input,
+.sort-form select {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Footer */
+.footer {
+    background-color: #F9F5E8;
+    padding: 20px 0;
+    margin-top: auto;
+    border-top: 3px solid #2e7d32;
+}
+
+.footer .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-text {
+    color:#60BA97;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .action-links {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .form-search-sort,
+    .search-form,
+    .sort-form {
+        flex-direction: column;
+    }
+    
+    .search-form input,
+    .sort-form select,
+    .form-search-sort input,
+    .form-search-sort select {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .stats {
+        max-width: 100%;
+    }
+    
+    table {
+        font-size: 14px;
+    }
+    
+    table th, table td {
+        padding: 8px 10px;
+    }
+}
+/* Réinitialisation globale */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Corps de la page */
+body {
+    display: flex;
+    min-height: 100vh;
+    background-color: #F5F5F5;
+}
+
+/* Barre de tâches à gauche */
+.taskbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px; /* Largeur de la barre de tâches */
+    background-color:#60BA97; /* Vert sombre */
+    color: #FFFFFF;
+    padding-top: 40px;
+    height: 100vh;
+    box-shadow: 3px 0 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-radius: 10px; /* Bords arrondis */
+}
+
+.taskbar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.taskbar-item {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacement entre l'emoji et le texte */
+    text-decoration: none;
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 15px 25px;
+    width: 100%;
+    transition: all 0.3s ease;
+    border-radius: 8px; /* Coins arrondis pour chaque élément */
+}
+
+.taskbar-item:hover {
+    background-color: #1b5e20; /* Changement de fond au survol */
+    color: #F9F5E8; /* Changement de couleur du texte au survol */
+}
+
+.taskbar-item span {
+    font-size: 24px; /* Taille des émojis */
+    transition: transform 0.3s ease;
+}
+
+/* Animation de l'emoji au survol */
+.taskbar-item:hover span {
+    transform: scale(1.2); /* L'emoji grossit légèrement au survol */
+}
+
+/* Contenu principal */
+main {
+    flex: 1;
+    margin-left: 270px; /* Décalage pour laisser de l'espace à la barre de tâches */
+    padding: 40px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.header {
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+    border-bottom: 3px solid #2e7d32;
+    margin-bottom: 30px;
+}
+
+.header .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header h1 {
+    color: #60BA97;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+/* Texte de bienvenue */
+.welcome-text {
+    color: #2e7d32;
+    font-size: 36px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Formulaire de connexion */
+.form-login {
+    background-color: #F9F5E8;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    font-size: 16px;
+    color: #60BA97;
     font-weight: bold;
 }
 
-.status.unavailable {
-    color: red;
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #4CAF50;
+    margin-top: 8px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #60BA97;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1b5e20; /* Changement de couleur du bouton */
+}
+
+/* Tableau de bord */
+.dashboard-links {
+    background-color: #F9F5E8;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.action-links a {
+    background-color:#60BA97;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.action-links a:hover {
+    background-color: #1b5e20; /* Changement de couleur au survol */
+}
+
+/* Footer */
+.footer {
+    background-color: #F9F5E8;
+    padding: 20px 0;
+    margin-top: 30px;
+    border-top: 3px solid #60BA97;
+    text-align: center;
+}
+
+.footer-text {
+    color:#60BA97;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .taskbar {
+        width: 220px;
+        padding-top: 30px;
+    }
+
+    .taskbar-item {
+        font-size: 16px;
+        padding: 12px 20px;
+    }
+
+    .taskbar-item span {
+        font-size: 20px;
+    }
+
+    main {
+        margin-left: 240px; /* Ajustement pour les écrans plus petits */
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .welcome-text {
+        font-size: 30px;
+    }
+
+    .form-login {
+        max-width: 90%;
+    }
+}
+/* Style pour le header */
+.header {
+    background-color: #fff;
+    color: #fff;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .container {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 24px;
     font-weight: bold;
 }
+
+.header .btn-logout {
+    background-color: #f44336; /* Rouge pour la déconnexion */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.header .btn-logout:hover {
+    background-color: #d32f2f;
+}
+.taskbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #60BA97;
+    color: #FFFFFF;
+    padding-top: 40px;
+    height: 100vh;
+    box-shadow: 3px 0 6px rgba(0, 0, 0, 0.1);
+    display: flex
+;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-radius: 10px;
+}
+/* Style pour la barre des tâches verticale */
+.sidebar {
+    width: 250px; /* Largeur de la barre */
+    height: 100vh; /* Prend toute la hauteur de l'écran */
+    position: fixed; /* Fixée sur la gauche */
+    top: 0;
+    left: 0;
+    background-color: #60BA97 ; /* Couleur de fond sombre */
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+    z-index: 1000; /* Toujours au-dessus */
+}
+
+/* Conteneur des éléments de la barre */
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Style pour chaque élément */
+.sidebar-item {
+    color: white; /* Couleur du texte */
+    text-decoration: none; /* Pas de soulignement */
+    padding: 15px 20px; /* Espacement interne */
+    margin: 10px 0; /* Espacement entre les éléments */
+    width: 90%; /* Largeur des boutons */
+    font-size: 16px; /* Taille du texte */
+    text-align: center;
+    border-radius: 8px; /* Coins arrondis */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transition fluide */
+}
+
+/* Icône et texte */
+.sidebar-item span {
+    margin-right: 10px; /* Espacement entre l'icône et le texte */
+    font-size: 18px; /* Taille de l'icône */
+}
+
+/* Effet au survol */
+.sidebar-item:hover {
+    background-color: #444; /* Couleur de survol */
+    transform: scale(1.05); /* Légère augmentation de taille */
+}
+
+/* Contenu principal décalé */
+.main-container {
+    margin-left: 250px; /* Décalage pour le contenu principal */
+    padding: 20px; /* Espacement interne pour le contenu */
+}
+
+/* Responsive pour les petits écrans */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px; /* Réduction de la largeur */
+    }
+
+    .main-container {
+        margin-left: 200px; /* Ajustement du décalage */
+    }
+
+    .sidebar-item {
+        font-size: 14px; /* Réduction de la taille */
+    }
+}
+

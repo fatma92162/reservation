@@ -16,7 +16,7 @@ if (isset($_GET['id'])) {
     $stmt->bindParam(':id_reservation', $id_reservation, PDO::PARAM_INT);
     $stmt->execute();
     $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$reservation) {    
+    if (!$reservation) {
         die("Réservation introuvable.");
     }
 }
@@ -67,65 +67,235 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier une Réservation</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
+            display: flex;
+            min-height: 100vh;
+            background-color: #F5F5F5;
+            flex-direction: column;
         }
+
+        .taskbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background-color: #1b5e20;
+            color: #FFFFFF;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .taskbar-logo h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .taskbar-menu ul {
+            list-style: none;
+        }
+
+        .taskbar-menu a {
+            text-decoration: none;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            display: block;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .taskbar-menu a:hover {
+            background-color: #2e7d32;
+        }
+
+        main {
+            margin-left: 250px;
+            padding: 40px;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+
         form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #F9F5E8;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 400px;
-            margin: auto;
+            margin: 0 auto;
         }
+
         label {
             display: block;
             margin: 10px 0 5px;
+            color: #1b5e20;
+            font-weight: bold;
         }
-        input, select, button {
+
+        input,
+        select {
             width: 100%;
             padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #1b5e20;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
+
         button {
-            background-color: #007BFF;
-            color: white;
+            width: 100%;
+            padding: 10px;
+            background-color: #1b5e20;
+            color: #FFFFFF;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
+
         button:hover {
-            background-color: #0056b3;
+            background-color: #2e7d32;
         }
     </style>
 </head>
 <body>
-    <h1>Modifier une Réservation</h1>
-    <form method="POST">
-        <input type="hidden" name="id_reservation" value="<?= $reservation['id_reservation'] ?>">
+    <div class="taskbar">
+        <div class="taskbar-logo">
+            <h1>Green.tn</h1>
+        </div>
+        <div class="taskbar-menu">
+            <ul>
+                <li><a href="index.php">🏠 Accueil</a></li>
+                <li><a href="reserver_velo.php">🚲 Réserver un Vélo</a></li>
+                <li><a href="consulter_reservations.php">📋 Mes Réservations</a></li>
+                <li><a href="historique_reservations.php">🕒 Historique</a></li>
+                <li><a href="logout.php">🚪 Déconnexion</a></li>
+            </ul>
+        </div>
+    </div>
 
-        <label for="id_velo">ID du Vélo :</label>
-        <input type="number" name="id_velo" value="<?= $reservation['id_velo'] ?>" required>
+    <main>
+        <form method="POST">
+            <input type="hidden" name="id_reservation" value="<?= $reservation['id_reservation'] ?>">
 
-        <label for="id_client">ID du Client :</label>
-        <input type="number" name="id_client" value="<?= $reservation['id_client'] ?>" required>
+            <label for="id_velo">ID du Vélo :</label>
+            <input type="number" name="id_velo" value="<?= $reservation['id_velo'] ?>">
+            <span class="error-message"></span>
 
-        <label for="date_debut">Date de Début :</label>
-        <input type="date" name="date_debut" value="<?= $reservation['date_debut'] ?>" required>
+            <label for="id_client">ID du Client :</label>
+            <input type="number" name="id_client" value="<?= $reservation['id_client'] ?>">
+            <span class="error-message"></span>
 
-        <label for="date_fin">Date de Fin :</label>
-        <input type="date" name="date_fin" value="<?= $reservation['date_fin'] ?>" required>
+            <label for="date_debut">Date de Début :</label>
+            <input type="date" name="date_debut" value="<?= $reservation['date_debut'] ?>">
+            <span class="error-message"></span>
 
-        <label for="gouvernorat">Gouvernorat :</label>
-        <input type="text" name="gouvernorat" value="<?= $reservation['gouvernorat'] ?>" required>
+            <label for="date_fin">Date de Fin :</label>
+            <input type="date" name="date_fin" value="<?= $reservation['date_fin'] ?>">
+            <span class="error-message"></span>
 
-        <label for="telephone">Téléphone :</label>
-        <input type="tel" name="telephone" pattern="[0-9]{8}" value="<?= $reservation['telephone'] ?>" required>
+            <label for="gouvernorat">Gouvernorat :</label>
+            <input type="text" name="gouvernorat" value="<?= $reservation['gouvernorat'] ?>">
+            <span class="error-message"></span>
 
-        <button type="submit">Modifier</button>
-    </form>
+            <label for="telephone">Téléphone :</label>
+            <input type="tel" name="telephone" pattern="[0-9]{8}" value="<?= $reservation['telephone'] ?>">
+            <span class="error-message"></span>
+
+            <button type="submit" title="Modifier">✏️</button>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+                const errorMessages = {
+                    id_velo: "Veuillez entrer un ID de vélo valide.",
+                    id_client: "Veuillez entrer un ID de client valide.",
+                    date_debut: "Veuillez sélectionner une date de début valide.",
+                    date_fin: "Veuillez sélectionner une date de fin valide et postérieure à la date de début.",
+                    gouvernorat: "Veuillez entrer un gouvernorat valide (au moins 3 caractères).",
+                    telephone: "Veuillez entrer un numéro de téléphone valide (8 chiffres).",
+                };
+
+                const idVelo = form.querySelector('[name="id_velo"]');
+                const idClient = form.querySelector('[name="id_client"]');
+                const dateDebut = form.querySelector('[name="date_debut"]');
+                const dateFin = form.querySelector('[name="date_fin"]');
+                const gouvernorat = form.querySelector('[name="gouvernorat"]');
+                const telephone = form.querySelector('[name="telephone"]');
+
+                form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+                if (!idVelo.value || isNaN(idVelo.value) || parseInt(idVelo.value) <= 0) {
+                    isValid = false;
+                    showError(idVelo, errorMessages.id_velo);
+                }
+
+                if (!idClient.value || isNaN(idClient.value) || parseInt(idClient.value) <= 0) {
+                    isValid = false;
+                    showError(idClient, errorMessages.id_client);
+                }
+
+                if (!dateDebut.value) {
+                    isValid = false;
+                    showError(dateDebut, errorMessages.date_debut);
+                }
+                if (!dateFin.value || dateDebut.value > dateFin.value) {
+                    isValid = false;
+                    showError(dateFin, errorMessages.date_fin);
+                }
+
+                if (!gouvernorat.value || gouvernorat.value.trim().length < 3) {
+                    isValid = false;
+                    showError(gouvernorat, errorMessages.gouvernorat);
+                }
+
+                if (!telephone.value || !/^\d{8}$/.test(telephone.value)) {
+                    isValid = false;
+                    showError(telephone, errorMessages.telephone);
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+
+            function showError(input, message) {
+                const errorContainer = input.nextElementSibling;
+                if (errorContainer && errorContainer.classList.contains('error-message')) {
+                    errorContainer.textContent = message;
+                }
+            }
+        });
+    </script>
 </body>
 </html>

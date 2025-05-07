@@ -1,0 +1,42 @@
+/* Styles pour les cercles de statistiques */
+.stat-circles-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.stat-circle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+}
+
+.stat-circle {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #f3f4f6;
+    border: 10px solid transparent;
+    background-image: conic-gradient(#4caf50 var(--value), #e0e0e0 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.stat-circle .stat-value {
+    position: absolute;
+    z-index: 1;
+}
+
+.stat-info {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    font-weight: normal;
+}

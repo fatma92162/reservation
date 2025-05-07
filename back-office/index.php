@@ -10,14 +10,33 @@
     <title>Accueil</title>
 </head>
 <body>
-    <header class="header">
-    <div class="container">
-        <h1 class="welcome-text">Bienvenue sur notre plateforme</h1>
+    <!-- Barre des tâches verticale -->
+<div class="sidebar">
+    <div class="sidebar-container">
+        <a href="index.php" class="sidebar-item">
+            <span>🏠</span> Accueil
+        </a>
+        <a href="dashboard.php" class="sidebar-item">
+            <span>📊</span> Tableau de Bord
+        </a>
+        <a href="ajouter_velo.php" class="sidebar-item">
+            <span>🚲</span> Ajouter un Vélo
+        </a>
+        <a href="consulter_velos.php" class="sidebar-item">
+            <span>🔍</span> Consulter les Vélos
+        </a>
+        <a href="logout.php" class="sidebar-item">
+            <span>🚪</span> Déconnexion
+        </a>
     </div>
-</header>
+</div>
 
-    <!-- En-tête -->
-    
+    <header class="header">
+        <div class="container">
+            <h1 class="welcome-text">Bienvenue sur notre plateforme</h1>
+        </div>
+    </header>
+
     <!-- Contenu principal -->
     <main class="main-container">
         <div class="container">
@@ -44,21 +63,21 @@
                 <section class="dashboard-links">
                     <h2>Bienvenue, <?= htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?> !</h2>
                     <div class="action-links">
-                            <a href="/projet/back-office/dashboard.php" class="btn btn-admin">Accéder au Back-Office</a>
-                            <a href="/projet/back-office/ajouter_velo.php" class="btn btn-secondary">Ajouter un Vélo</a>
-                            <a href="/projet/back-office/dashboard.php" class="btn btn-secondary">Consulter les Vélos</a>
-                            <a href="logout.php" class="btn btn-logout">Se déconnecter</a>
+                        <a href="/projet/back-office/dashboard.php" class="btn btn-admin">Accéder au Back-Office</a>
+                        <a href="/projet/back-office/ajouter_velo.php" class="btn btn-secondary">Ajouter un Vélo</a>
+                        <a href="/projet/back-office/dashboard.php" class="btn btn-secondary">Consulter les Vélos</a>
+                        <a href="logout.php" class="btn btn-logout">Se déconnecter</a>
                     </div>
                 </section>
             <?php endif; ?>
         </div>
     </main>
 
-   <footer class="footer">
-    <div class="container">
-        <p class="footer-text">© 2025 Votre Entreprise. Tous droits réservés.</p>
-    </div>
-</footer>
->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 Votre Entreprise. Tous droits réservés.</p>
+        </div>
+    </footer>
+
 </body>
 </html>

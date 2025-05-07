@@ -7,97 +7,72 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'client') {
     exit();
 }
 
-// Définir le critère de tri par défaut
-$sort_by = 'id_reservation'; // Tri par ID de réservation par défaut
-$order = 'ASC'; // Ordre croissant par défaut
-$search = ''; // Variable pour la recherche
-$items_per_page = 5; // Nombre d'éléments par page
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1; // Page actuelle
-$offset = ($page - 1) * $items_per_page; // Calcul de l'offset
-
-// Vérifier si un critère de tri est défini dans l'URL
-if (isset($_GET['sort_by'])) {
-    $sort_by = $_GET['sort_by'];
-}
-if (isset($_GET['order']) && in_array($_GET['order'], ['ASC', 'DESC'])) {
-    $order = $_GET['order'];
-}
-
-// Vérifier si un terme de recherche est saisi
-if (isset($_GET['search'])) {
-    $search = $_GET['search'];
-}
-
 try {
     // Connexion à la base de données
     $pdo = new PDO('mysql:host=localhost;dbname=velo_reservation', 'root', '');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Récupérer le nombre total de réservations pour la pagination
-    $countQuery = '
-    SELECT COUNT(*) as total
-    FROM reservation r
-    INNER JOIN utilisateur u ON r.id_client = u.id_utilisateur
-    WHERE r.id_client = :id_client';
-    
-    if ($search) {
-        $countQuery .= ' AND (u.nom LIKE :search OR r.gouvernorat LIKE :search OR r.id_reservation LIKE :search)';
+    // Paramètres de pagination
+    $items_per_page = 5;
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    $offset = ($page - 1) * $items_per_page;
+
+    // Gérer l'action de récupération
+    if (isset($_GET['action']) && $_GET['action'] === 'recuperer' && isset($_GET['id']) && is_numeric($_GET['id'])) {
+        $sql = "UPDATE reservation SET deleted_at = NULL WHERE id_reservation = :id AND id_client = :id_client";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $_GET['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_client', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            $_SESSION['notification'] = [
+                'type' => 'success',
+                'message' => 'Réservation récupérée avec succès.'
+            ];
+        } else {
+            $_SESSION['notification'] = [
+                'type' => 'error',
+                'message' => 'Erreur : Réservation non trouvée ou vous n\'avez pas les permissions.'
+            ];
+        }
+        header('Location: corbeille.php');
+        exit();
     }
 
+    // Compter le nombre total de réservations supprimées
+    $countQuery = '
+        SELECT COUNT(*) as total
+        FROM reservation r
+        WHERE r.id_client = :id_client AND r.deleted_at IS NOT NULL';
     $countStmt = $pdo->prepare($countQuery);
     $countStmt->bindParam(':id_client', $_SESSION['user_id'], PDO::PARAM_INT);
-    if ($search) {
-        $searchTerm = "%" . $search . "%";
-        $countStmt->bindParam(':search', $searchTerm, PDO::PARAM_STR);
-    }
     $countStmt->execute();
     $total_items = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
-    $total_pages = ceil($total_items / $items_per_page); // Calcul du nombre total de pages
+    $total_pages = ceil($total_items / $items_per_page);
 
-    // Récupérer les réservations avec tri, recherche et pagination
+    // Récupérer les réservations supprimées
     $query = '
-    SELECT r.*, u.nom AS nom_utilisateur
-    FROM reservation r
-    INNER JOIN utilisateur u ON r.id_client = u.id_utilisateur
-    WHERE r.id_client = :id_client';
-
-    // Ajouter le filtre de recherche si un terme est saisi
-    if ($search) {
-        $query .= ' AND (u.nom LIKE :search OR r.gouvernorat LIKE :search OR r.id_reservation LIKE :search)';
-    }
-
-    $query .= ' ORDER BY ' . $sort_by . ' ' . $order;
-    $query .= ' LIMIT :offset, :items_per_page';
-
-    // Préparer la requête SQL
+        SELECT r.*, u.nom AS nom_utilisateur
+        FROM reservation r
+        LEFT JOIN utilisateur u ON r.id_client = u.id_utilisateur
+        WHERE r.id_client = :id_client AND r.deleted_at IS NOT NULL
+        ORDER BY r.deleted_at DESC
+        LIMIT :offset, :items_per_page';
     $stmt = $pdo->prepare($query);
     $stmt->bindParam(':id_client', $_SESSION['user_id'], PDO::PARAM_INT);
     $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
     $stmt->bindParam(':items_per_page', $items_per_page, PDO::PARAM_INT);
-    
-    // Lier le paramètre de recherche
-    if ($search) {
-        $searchTerm = "%" . $search . "%";
-        $stmt->bindParam(':search', $searchTerm, PDO::PARAM_STR);
-    }
-
     $stmt->execute();
     $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Récupérer les statistiques des gouvernorats
-    $statQuery = '
-    SELECT gouvernorat, COUNT(*) AS total
-    FROM reservation
-    GROUP BY gouvernorat
-    ORDER BY total DESC
-    ';
-    $statStmt = $pdo->query($statQuery);
-    $gouvernoratStats = $statStmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Calculer le nombre total de réservations
-    $totalReservationsQuery = 'SELECT COUNT(*) AS total FROM reservation';
-    $totalStmt = $pdo->query($totalReservationsQuery);
-    $totalReservations = $totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
+    // Debug (commenter après test)
+    /*
+    echo 'Debug: user_id = ' . htmlspecialchars($_SESSION['user_id']) . '<br>';
+    echo 'Debug: ' . count($reservations) . ' réservations supprimées trouvées.<pre>';
+    print_r($reservations);
+    echo '</pre>';
+    */
 
 } catch (PDOException $e) {
     die('Erreur de connexion : ' . $e->getMessage());
@@ -109,7 +84,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulter les Réservations</title>
+    <title>Corbeille des Réservations</title>
     <style>
         /* Réinitialisation globale */
         * {
@@ -245,22 +220,22 @@ try {
             margin: 10px 5px;
         }
 
-        .btn-add, .btn-historique, .btn-edit, .btn-detail {
+        .btn-add {
             background-color: #1b5e20;
             color: #FFFFFF;
         }
 
-        .btn-add:hover, .btn-historique:hover, .btn-edit:hover, .btn-detail:hover {
+        .btn-add:hover {
             background-color: #2e7d32;
         }
 
-        .btn-delete {
-            background-color: #f44336;
+        .btn-recover {
+            background-color: #2196F3;
             color: #FFFFFF;
         }
 
-        .btn-delete:hover {
-            background-color: #d32f2f;
+        .btn-recover:hover {
+            background-color: #1976D2;
         }
 
         .btn-logout {
@@ -274,36 +249,6 @@ try {
 
         .btn-logout:hover {
             background-color: #d32f2f;
-        }
-
-        /* Formulaires de recherche et de tri */
-        .search-form, .sort-form {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .search-form input, .sort-form select {
-            padding: 10px;
-            border: 1px solid #1b5e20;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .search-form button, .sort-form button {
-            padding: 10px 20px;
-            background-color: #1b5e20;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .search-form button:hover, .sort-form button:hover {
-            background-color: #2e7d32;
         }
 
         /* Tableaux */
@@ -368,67 +313,6 @@ try {
             pointer-events: none;
         }
 
-        /* Section des statistiques */
-        .stat-section {
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        .stat-section h2 {
-            color: #1b5e20;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .stat-circles-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .stat-circle-container {
-            text-align: center;
-        }
-
-        .stat-circle {
-            width: 100px;
-            height: 100px;
-            background: conic-gradient(#1b5e20 calc(var(--value) * 1%), #ddd 0);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin: 0 auto;
-        }
-
-        .stat-circle::before {
-            content: '';
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background-color: #F9F5E8;
-            border-radius: 50%;
-        }
-
-        .stat-value {
-            position: relative;
-            font-size: 18px;
-            font-weight: bold;
-            color: #1b5e20;
-        }
-
-        .stat-info {
-            margin-top: 10px;
-        }
-
-        .stat-info p {
-            color: #1b5e20;
-            font-size: 16px;
-        }
-
         /* Pied de page */
         .footer {
             background-color: #F9F5E8;
@@ -461,7 +345,7 @@ try {
         /* Responsive */
         @media (max-width: 768px) {
             .taskbar {
-                width: 200px; 
+                width: 200px;
             }
 
             main {
@@ -471,24 +355,6 @@ try {
             table th, table td {
                 font-size: 14px;
                 padding: 8px;
-            }
-
-            .search-form, .sort-form {
-                flex-direction: column;
-            }
-
-            .stat-circle {
-                width: 80px;
-                height: 80px;
-            }
-
-            .stat-circle::before {
-                width: 60px;
-                height: 60px;
-            }
-
-            .stat-value {
-                font-size: 16px;
             }
         }
     </style>
@@ -504,6 +370,7 @@ try {
                 <li><a href="index.php"><span>🏠</span> Accueil</a></li>
                 <li><a href="ajouter_reservation.php"><span>🚲</span> Réserver un Vélo</a></li>
                 <li><a href="consulter_reservations.php"><span>📋</span> Mes Réservations</a></li>
+                <li><a href="corbeille.php"><span>🗑️</span> Corbeille</a></li>
                 <li><a href="historique.php"><span>🕒</span> Historique</a></li>
                 <li><a href="logout.php"><span>🚪</span> Déconnexion</a></li>
             </ul>
@@ -513,7 +380,7 @@ try {
     <main>
         <header class="header">
             <div class="container">
-                <h1>Gestion des Réservations</h1>
+                <h1>Corbeille des Réservations</h1>
                 <a href="logout.php" class="btn btn-logout" title="Déconnexion">🚪</a>
             </div>
         </header>
@@ -524,39 +391,11 @@ try {
                 <div class="notification <?= htmlspecialchars($_SESSION['notification']['type']); ?>">
                     <?= htmlspecialchars($_SESSION['notification']['message']); ?>
                 </div>
-                <?php unset($_SESSION['notification']); // Supprimer la notification après affichage ?>
+                <?php unset($_SESSION['notification']); ?>
             <?php endif; ?>
 
-            <h2>Liste des Réservations</h2>
-            <a href="ajouter_reservation.php" class="btn btn-add" title="Ajouter une Réservation">➕</a>
-
-            <!-- Bouton Historique -->
-            <a href="historique.php" class="btn btn-historique" title="Voir l'Historique">🕒</a>
-
-            <!-- Formulaire de recherche -->
-            <form method="get" action="" class="search-form">
-                <input type="text" name="search" value="<?= htmlspecialchars($search); ?>" placeholder="Rechercher par nom, gouvernorat ou ID" />
-                <button type="submit" title="Rechercher">🔍</button>
-            </form>
-
-            <!-- Box de sélection du tri -->
-            <form method="get" action="" class="sort-form">
-                <label for="sort_by">Trier par :</label>
-                <select name="sort_by" id="sort_by">
-                    <option value="id_reservation" <?= $sort_by == 'id_reservation' ? 'selected' : ''; ?>>ID Réservation</option>
-                    <option value="date_debut" <?= $sort_by == 'date_debut' ? 'selected' : ''; ?>>Date Début</option>
-                    <option value="gouvernorat" <?= $sort_by == 'gouvernorat' ? 'selected' : ''; ?>>Gouvernorat</option>
-                    <!-- Option de tri par nom d'utilisateur retirée -->
-                </select>
-
-                <label for="order">Ordre :</label>
-                <select name="order" id="order">
-                    <option value="ASC" <?= $order == 'ASC' ? 'selected' : ''; ?>>Croissant</option>
-                    <option value="DESC" <?= $order == 'DESC' ? 'selected' : ''; ?>>Décroissant</option>
-                </select>
-
-                <button type="submit" title="Appliquer">🔽</button>
-            </form>
+            <h2>Réservations Supprimées</h2>
+            <a href="consulter_reservations.php" class="btn btn-add" title="Retour aux Réservations">📋 Mes Réservations</a>
 
             <?php if (count($reservations) > 0): ?>
                 <table>
@@ -564,14 +403,14 @@ try {
                         <tr>
                             <th>ID Réservation</th>
                             <th>ID Vélo</th>
-                            <th>Nom Utilisateur</th>
                             <th>Date Début</th>
                             <th>Date Fin</th>
                             <th>Gouvernorat</th>
                             <th>Téléphone</th>
                             <th>Durée Réservation (jours)</th>
                             <th>Date Réservation</th>
-                            <th>Actions</th>
+                            <th>Date de Suppression</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -579,17 +418,15 @@ try {
                             <tr>
                                 <td><?= htmlspecialchars($reservation['id_reservation']); ?></td>
                                 <td><?= htmlspecialchars($reservation['id_velo']); ?></td>
-                                <td></td> <!-- Champ nom d'utilisateur laissé vide -->
                                 <td><?= htmlspecialchars($reservation['date_debut']); ?></td>
                                 <td><?= htmlspecialchars($reservation['date_fin']); ?></td>
                                 <td><?= htmlspecialchars($reservation['gouvernorat']); ?></td>
                                 <td><?= htmlspecialchars($reservation['telephone']); ?></td>
                                 <td><?= htmlspecialchars($reservation['duree_reservation']); ?></td>
                                 <td><?= htmlspecialchars($reservation['date_reservation']); ?></td>
+                                <td><?= htmlspecialchars($reservation['deleted_at']); ?></td>
                                 <td>
-                                    <a href="modifier_reservation.php?id=<?= $reservation['id_reservation']; ?>" class="btn btn-edit" title="Modifier">✏️</a>
-                                    <a href="supprimer_reservation.php?id=<?= $reservation['id_reservation']; ?>" class="btn btn-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');" title="Supprimer">🗑️</a>
-                                    <a href="details_reservation.php?id=<?= $reservation['id_reservation']; ?>" class="btn btn-detail" title="Détails">ℹ️</a>
+                                    <a href="corbeille.php?action=recuperer&id=<?= $reservation['id_reservation']; ?>" class="btn btn-recover" onclick="return confirm('Êtes-vous sûr de vouloir récupérer cette réservation ?');" title="Récupérer">🔄</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -599,52 +436,27 @@ try {
                 <!-- Pagination -->
                 <div class="pagination">
                     <?php
-                    // Lien "Précédent"
                     $prev_page = $page - 1;
                     $prev_class = $page == 1 ? 'disabled' : '';
-                    $prev_url = $prev_page > 0 ? "consulter_reservations.php?page=$prev_page&sort_by=$sort_by&order=$order" . ($search ? "&search=" . urlencode($search) : "") : "#";
+                    $prev_url = $prev_page > 0 ? "corbeille.php?page=$prev_page" : "#";
                     echo "<a href='$prev_url' class='$prev_class'>⬅️</a>";
 
-                    // Liens numérotés pour les pages
                     for ($i = 1; $i <= $total_pages; $i++) {
                         $active_class = $i == $page ? 'active' : '';
-                        $page_url = "consulter_reservations.php?page=$i&sort_by=$sort_by&order=$order" . ($search ? "&search=" . urlencode($search) : "");
+                        $page_url = "corbeille.php?page=$i";
                         echo "<a href='$page_url' class='$active_class'>$i</a>";
                     }
 
-                    // Lien "Suivant"
                     $next_page = $page + 1;
                     $next_class = $page == $total_pages ? 'disabled' : '';
-                    $next_url = $next_page <= $total_pages ? "consulter_reservations.php?page=$next_page&sort_by=$sort_by&order=$order" . ($search ? "&search=" . urlencode($search) : "") : "#";
+                    $next_url = $next_page <= $total_pages ? "corbeille.php?page=$next_page" : "#";
                     echo "<a href='$next_url' class='$next_class'>➡️</a>";
                     ?>
                 </div>
 
             <?php else: ?>
-                <p>Aucune réservation trouvée.</p>
+                <p>Aucune réservation dans la corbeille.</p>
             <?php endif; ?>
-        </div>
-
-        <!-- Section des statistiques -->
-        <div class="stat-section">
-            <h2>Statistiques</h2>
-        </div>
-
-        <!-- Cercle de statistiques pour chaque gouvernorat -->
-        <div class="stat-circles-container">
-            <?php
-            foreach ($gouvernoratStats as $stat) {
-                $percentage = ($stat['total'] / $totalReservations) * 100;
-            ?>
-                <div class="stat-circle-container">
-                    <div class="stat-circle" data-value="<?= round($percentage); ?>">
-                        <span class="stat-value"><?= round($percentage); ?>%</span>
-                    </div>
-                    <div class="stat-info">
-                        <p><?= htmlspecialchars($stat['gouvernorat']); ?></p>
-                    </div>
-                </div>
-            <?php } ?>
         </div>
     </main>
 
@@ -653,15 +465,5 @@ try {
             <p>© <?= date("Y"); ?> Green.tn</p>
         </div>
     </footer>
-
-    <!-- Code JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.stat-circle').forEach(circle => {
-                const value = circle.getAttribute('data-value');
-                circle.style.setProperty('--value', value); // Applique dynamiquement la valeur au cercle
-            });
-        });
-    </script>
 </body>
 </html>

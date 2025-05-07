@@ -58,5 +58,31 @@
             <p>&copy; <?= date("Y"); ?> Votre Entreprise. Tous droits réservés.</p>
         </div>
     </footer>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="taskbar">
+        <div class="taskbar-container">
+            <a href="#" class="taskbar-item">
+                <span>🏠</span> Home
+            </a>
+            <a href="#" class="taskbar-item">
+                <span>📊</span> Stats
+            </a>
+            <a href="#" class="taskbar-item">
+                <span>🔧</span> Settings
+            </a>
+            <a href="#" class="taskbar-item">
+                <span>🚪</span> Logout
+            </a>
+        </div>
+    </div>
+   
 </body>
 </html>
